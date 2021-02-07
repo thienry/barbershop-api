@@ -1,4 +1,5 @@
 import express from 'express'
+import morgan from 'morgan'
 import routes from './routes'
 
 class App {
@@ -11,6 +12,7 @@ class App {
 
   middlewares() {
     this.server.use(express.json())
+    if (process.env.NODE_ENV === 'dev') this.express.use(morgan('dev'))
   }
 
   routes() {
