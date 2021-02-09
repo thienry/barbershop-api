@@ -1,9 +1,11 @@
 import Sequelize from 'sequelize'
+
 import User from '../app/models/User'
 import Upload from '../app/models/Upload'
 import dbConfig from '../config/database'
+import Appointment from '../app/models/Appointment'
 
-const models = [User, Upload]
+const models = [User, Upload, Appointment]
 
 class Database {
   constructor () {
