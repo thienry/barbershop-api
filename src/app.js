@@ -1,3 +1,4 @@
+import path from 'path'
 import dotenv from 'dotenv'
 import morgan from 'morgan'
 import express from 'express'
@@ -16,6 +17,8 @@ class App {
 
   middlewares () {
     this.server.use(express.json())
+    this.server.use('/files', express.static(path.resolve(__dirname, '..', 'temp', 'uploads')))
+
     if (process.env.NODE_ENV === 'dev') this.server.use(morgan('dev'))
   }
 
