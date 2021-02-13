@@ -3,6 +3,8 @@ import { Router } from 'express'
 
 import multerConfig from './config/multer'
 import authMiddleware from './app/middlewares/auth'
+
+// Controllers
 import UserController from './app/controllers/UserController'
 import UploadController from './app/controllers/UploadController'
 import SessionController from './app/controllers/SessionController'
@@ -12,21 +14,26 @@ import AvailableController from './app/controllers/AvailableController'
 import AppointmentController from './app/controllers/AppointmentController'
 import NotificationController from './app/controllers/NotificationController'
 
+// Validators
+import { sessionStore } from './app/validators/SessionValidation'
+import { userStore, userUpdate } from './app/validators/UserValidation'
+import { appointmentStore } from './app/validators/AppointmentValidation'
+
 const routes = new Router()
 const upload = multer(multerConfig)
 
-routes.post('/users', UserController.store)
-routes.post('/sessions', SessionController.store)
+routes.post('/users', userStore, UserController.store)
+routes.post('/sessions', sessionStore, SessionController.store)
    
 routes.use(authMiddleware)
-routes.put('/users', UserController.update)
+routes.put('/users', userUpdate,  UserController.update)
 
 routes.get('/providers', ProviderController.index)
 routes.get('/providers/:providerId/available', AvailableController.index)
 
 routes.get('/appointments', AppointmentController.index)
-routes.post('/appointments', AppointmentController.store)
-routes.delete('/appointments', AppointmentController.delete)
+routes.post('/appointments', appointmentStore, AppointmentController.store)
+routes.delete('/appointments/:id', AppointmentController.delete)
 
 routes.get('schedule', ScheduleController.index)
 
