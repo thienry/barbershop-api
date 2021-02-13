@@ -2,6 +2,7 @@ import * as Yup from 'yup'
 import pt from 'date-fns/locale/pt'
 import { startOfHour, parseISO, isBefore, format, subHours } from 'date-fns'
 
+import Mail from '../../lib/Mail'
 import User from '../models/User'
 import Upload from '../models/Upload'
 import Appointment from '../models/Appointment'
@@ -43,7 +44,8 @@ class AppointmentController {
     })
 
     const isValidParams = await schema.isValid(req.body)
-    if (!isValidParams) return res.status(400).json({ error: 'Validation fails!' })
+    if (!isValidParams)
+      return res.status(400).json({ error: 'Validation fails!' })
 
     const { provider_id, date } = req.body
 
@@ -51,12 +53,14 @@ class AppointmentController {
       where: { id: provider_id, provider: true }
     })
 
-    if (!isProvider) return res.status(401).json({ error: 'You can only create appointments with providers' })
+    if (!isProvider)
+      return res.status(401).json({ error: 'You can only create appointments with providers' })
 
     const hourStart = startOfHour(parseISO(date))
     const isReallyBefore = isBefore(hourStart, new Date())
 
-    if (isReallyBefore) return res.status(400).json({ error: 'Past dates are not allowed' })
+    if (isReallyBefore)
+      return res.status(400).json({ error: 'Past dates are not allowed' })
 
     const checkAvailability = await Appointment.findOne({
       where: {
@@ -64,7 +68,8 @@ class AppointmentController {
       }
     })
 
-    if (checkAvailability) return res.status(400).json({ error: 'Past dates are not allowed' })
+    if (checkAvailability)
+      return res.status(400).json({ error: 'Past dates are not allowed' })
 
     const appointment = await Appointment.create({
       user_id: req.userId,
@@ -86,7 +91,15 @@ class AppointmentController {
   }
 
   async delete(req, res) {
-    const appointment = await Appointment.findByPk(req.params.id)
+    const appointment = await Appointment.findByPk(req.params.id, {
+      include: [
+        {
+          model: User,
+          as: 'provider',
+          attributes: ['name', 'email']
+        }
+      ]
+    })
 
     if (appointment.user_id !== req.userId)
       return res.status(401).json({ error: 'You don\'t have permission to cancel this appointment!' })
@@ -100,7 +113,14 @@ class AppointmentController {
     appointment.canceled_at = new Date()
 
     await appointment.save()
-    
+
+    const { name, email } = appointment.provider
+    await Mail.sendMail({
+      to: `${name} <${email}>`,
+      subject: 'Agendamento Cancelado!',
+      text: 'Voce tem um novo cancelamento'
+    })
+
     return res.json(appointment)
   }
 }
