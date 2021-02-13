@@ -17,3 +17,8 @@ services:
       - MONGO_INITDB_DATABASE=gobarber
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=root
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
