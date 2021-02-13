@@ -8,7 +8,7 @@ export default class Upload extends Model {
       url: {
         type: Sequelize.VIRTUAL,
         get () {
-          return `http://localhost:5000/files/${this.path}`
+          return `${process.env.APP_HOST}:${process.env.APP_PORT}/files/${this.path}`
         }
       }
     }, { sequelize })

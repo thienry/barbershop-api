@@ -1,6 +1,6 @@
+import 'dotenv/config'
 import path from 'path'
 import Youch from 'youch'
-import dotenv from 'dotenv'
 import morgan from 'morgan'
 import express from 'express'
 import 'express-async-errors'
@@ -13,9 +13,8 @@ import sentryConfig from './config/sentry'
 import './database'
 
 class App {
-  constructor() {
+  constructor () {
     this.server = express()
-    this.dotenv = dotenv.config()
 
     this.initSentry()
     this.middlewares()
@@ -23,18 +22,18 @@ class App {
     this.exceptionHandler()
   }
 
-  initSentry() {
+  initSentry () {
     Sentry.init({
       dsn: sentryConfig.dsn,
       integrations: [
         new Sentry.Integrations.Http({ tracing: true }),
-        new Tracing.Integrations.Express({ app: this.server }),
+        new Tracing.Integrations.Express({ app: this.server })
       ],
-      tracesSampleRate: 1.0,
-    });
+      tracesSampleRate: 1.0
+    })
   }
 
-  middlewares() {
+  middlewares () {
     this.server.use(Sentry.Handlers.requestHandler())
     this.server.use(Sentry.Handlers.tracingHandler())
     this.server.use(express.json())
@@ -43,15 +42,19 @@ class App {
     if (process.env.NODE_ENV === 'dev') this.server.use(morgan('dev'))
   }
 
-  routes() {
+  routes () {
     this.server.use(routes)
     this.server.use(Sentry.Handlers.errorHandler())
   }
 
-  exceptionHandler() {
+  exceptionHandler () {
     this.server.use(async (err, req, res, next) => {
-      const errors = await new Youch(err, req).toJSON()
-      return res.status(500).json(errors)
+      if (process.env.NODE_ENV === 'dev') {
+        const errors = await new Youch(err, req).toJSON()
+        return res.status(500).json(errors)
+      }
+
+      return res.status(500).json({ error: 'Internal Server Error!' })
     })
   }
 }
