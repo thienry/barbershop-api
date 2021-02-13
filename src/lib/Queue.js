@@ -1,3 +1,4 @@
+import chalk from 'chalk'
 import Bee from 'bee-queue'
 
 import redisConfig from '../config/redis'
@@ -30,8 +31,12 @@ class Queue {
   processQueue() {
     for (const { key } of jobs) {
       const { bee, handle } = this.queues[key]
-      bee.process(handle)
+      bee.on('failed', this.handleFailure).process(handle)
     }
+  }
+
+  handleFailure(job, err) {
+    console.log(chalk.bgRedBright(`Queue ${job.queue.name}: FAILED`, err))
   }
 }
 
