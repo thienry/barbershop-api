@@ -9,6 +9,7 @@ import SessionController from './app/controllers/SessionController'
 import ProviderController from './app/controllers/ProviderController'
 import ScheduleController from './app/controllers/ScheduleController'
 import AppointmentController from './app/controllers/AppointmentController'
+import NotificationController from './app/controllers/NotificationController'
 
 const routes = new Router()
 const upload = multer(multerConfig)
@@ -23,8 +24,12 @@ routes.get('/providers', ProviderController.index)
 
 routes.get('/appointments', AppointmentController.index)
 routes.post('/appointments', AppointmentController.store)
+routes.delete('/appointments', AppointmentController.delete)
 
 routes.get('schedule', ScheduleController.index)
+
+routes.get('notifications', NotificationController.index)
+routes.put('notifications/:id', NotificationController.update)
 
 routes.post('/files', upload.single('file'), UploadController.store)
 
