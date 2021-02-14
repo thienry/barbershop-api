@@ -1,6 +1,6 @@
 import * as Yup from 'yup'
 
-export const userStore = (req, res, next) => {
+export const userStore = async (req, res, next) => {
   try {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
@@ -16,7 +16,7 @@ export const userStore = (req, res, next) => {
   }
 }
 
-export const userUpdate = (req, res, next) => {
+export const userUpdate = async (req, res, next) => {
   try {
     const schema = Yup.object().shape({
       name: Yup.string(),
