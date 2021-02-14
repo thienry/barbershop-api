@@ -7,7 +7,7 @@ import Appointment from '../../models/Appointment'
 import Notification from '../../schemas/Notification'
 
 class CreateAppointment {
-  async run({ provider_id, user_id, date, cacheKey }) {
+  async run({ provider_id, user_id, date }) {
     const isProvider = await User.findOne({
       where: { id: provider_id, provider: true }
     })
