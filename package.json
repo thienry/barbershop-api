@@ -1,6 +1,6 @@
 {
   "name": "gobarber-api",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "API da aplicação GoBarber",
   "main": "src/server.js",
   "scripts": {
