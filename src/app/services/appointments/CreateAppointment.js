@@ -2,11 +2,12 @@ import pt from 'date-fns/locale/pt'
 import { startOfHour, parseISO, isBefore, format } from 'date-fns'
 
 import User from '../../models/User'
+import Cache from '../../../lib/Cache'
 import Appointment from '../../models/Appointment'
 import Notification from '../../schemas/Notification'
 
 class CreateAppointment {
-  async run({ provider_id, user_id, date }) {
+  async run({ provider_id, user_id, date, cacheKey }) {
     const isProvider = await User.findOne({
       where: { id: provider_id, provider: true }
     })
@@ -44,6 +45,8 @@ class CreateAppointment {
       content: `Novo agendamento de ${user.name} para ${formattedDate}`,
       user: provider_id
     })
+
+    await Cache.invalidatePrefix(`user:${user_id}:appointments:`)
 
     return appointment
   }

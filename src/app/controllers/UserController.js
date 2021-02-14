@@ -1,11 +1,17 @@
 import User from '../models/User'
+import Cache from '../../lib/Cache'
 
 class UserController {
   async store (req, res) {
     const userExists = await User.findOne({ where: { email: req.body.email } })
-    if (userExists) return res.status(400).json({ error: 'User already exists!' })
+
+    if (userExists)
+      return res.status(400).json({ error: 'User already exists!' })
 
     const { id, name, email, provider } = await User.create(req.body)
+
+    if (provider)
+      return Cache.invalidate('providers')
 
     return res.json({ id, name, email, provider })
   }
@@ -16,11 +22,15 @@ class UserController {
 
     if (email !== user.email) {
       const userExists = await User.findOne({ where: { email } })
-      if (userExists) return res.status(400).json({ error: 'User already exists!' })
+
+      if (userExists)
+        return res.status(400).json({ error: 'User already exists!' })
     }
 
     const resultCheck = await user.checkPassword(oldPassword)
-    if (oldPassword && !resultCheck) return res.status(401).json({ error: 'Password doesn\'t match ' })
+
+    if (oldPassword && !resultCheck)
+      return res.status(401).json({ error: 'Password doesn\'t match ' })
 
     const { id, name, provider } = await User.update(req.body)
 

@@ -1,9 +1,10 @@
 import { isBefore, subHours } from 'date-fns'
 
-import Queue from '../../lib/Queue'
 import User from '../../models/User'
+import Cache from '../../../lib/Cache'
+import Queue from '../../../lib/Queue'
 import Appointment from '../../models/Appointment'
-import CancellationMail from '../jobs/CancellationMail'
+import CancellationMail from '../../jobs/CancellationMail'
 
 class DeleteAppointment {
   async run({ provider_id, user_id }) {
@@ -35,6 +36,7 @@ class DeleteAppointment {
 
     await appointment.save()
     await Queue.add(CancellationMail.key, { appointment })
+    await Cache.invalidatePrefix(`user:${user_id}:appointments:`)
 
     return appointment
   }
