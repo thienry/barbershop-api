@@ -10,7 +10,7 @@ class UserController {
 
     const { id, name, email, provider } = await User.create(req.body)
 
-    if (provider) { return Cache.invalidate('providers') }
+    if (provider) { await Cache.invalidate('providers') }
 
     return res.json({ id, name, email, provider })
   }
