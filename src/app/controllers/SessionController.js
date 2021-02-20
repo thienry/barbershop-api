@@ -27,7 +27,7 @@ class SessionControler {
 
     const session = res.json({
       user: { id, name, email, avatar, provider },
-      token: jwt.sign({ id }, process.env.SECRET, {
+      token: jwt.sign({ id }, process.env.APP_SECRET, {
         expiresIn: process.env.EXPIRESIN
       })
     })
