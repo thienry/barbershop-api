@@ -14,9 +14,9 @@ services:
     ports:
       - "27017:27017"
     environment:
-      - MONGO_INITDB_DATABASE=gobarber
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=root
+      - MONGO_INITDB_DATABASE=barber_shop
+      - MONGO_INITDB_ROOT_USERNAME=thienry
+      - MONGO_INITDB_ROOT_PASSWORD=thienry
 
   redis:
     image: redis

@@ -10,7 +10,7 @@ class ScheduleController {
       where: { id: req.userId, provider: true }
     })
 
-    if (!checkUserProvider) return res.status(401).json({ error: 'User is not a provider!' })
+    if (!checkUserProvider) { return res.status(401).json({ error: 'User is not a provider!' }) }
 
     const { date } = req.query
     const parseDate = parseISO(date)

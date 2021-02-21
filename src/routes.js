@@ -43,10 +43,10 @@ routes.get('/appointments', AppointmentController.index)
 routes.post('/appointments', appointmentStore, AppointmentController.store)
 routes.delete('/appointments/:id', AppointmentController.delete)
 
-routes.get('schedule', ScheduleController.index)
+routes.get('/schedule', ScheduleController.index)
 
-routes.get('notifications', NotificationController.index)
-routes.put('notifications/:id', NotificationController.update)
+routes.get('/notifications', NotificationController.index)
+routes.put('/notifications/:id', NotificationController.update)
 
 routes.post('/files', upload.single('file'), UploadController.store)
 
