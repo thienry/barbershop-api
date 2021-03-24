@@ -16,11 +16,17 @@ class Database {
   }
 
   init () {
-    this.connection = new Sequelize(dbConfig)
+    try {
+      this.connection = new Sequelize(dbConfig)
 
-    models
-      .map(model => model.init(this.connection))
-      .map(model => model.associate && model.associate(this.connection.models))
+      models
+        .map(model => model.init(this.connection))
+        .map(model => model.associate && model.associate(this.connection.models))
+
+      console.log(chalk.bgBlueBright('Postgres is connected'))
+    } catch (error) {
+      console.log(chalk.bgRedBright(error))
+    }
   }
 
   async mongo () {
