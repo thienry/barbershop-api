@@ -1,7 +1,7 @@
 {
   "name": "gobarber-api",
   "version": "1.0.0",
-  "description": "API da aplicação GoBarber",
+  "description": "API da aplicação Barbershop",
   "main": "src/server.js",
   "scripts": {
     "dev": "nodemon",
