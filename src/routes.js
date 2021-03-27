@@ -6,7 +6,7 @@ import BruteRedis from 'express-brute-redis'
 import multerConfig from './config/multer'
 import authMiddleware from './app/middlewares/auth'
 
-// Controllers
+import AppController from './app/controllers/AppController'
 import UserController from './app/controllers/UserController'
 import UploadController from './app/controllers/UploadController'
 import SessionController from './app/controllers/SessionController'
@@ -16,7 +16,6 @@ import AvailableController from './app/controllers/AvailableController'
 import AppointmentController from './app/controllers/AppointmentController'
 import NotificationController from './app/controllers/NotificationController'
 
-// Validators
 import { sessionStore } from './app/validators/SessionValidation'
 import { userStore, userUpdate } from './app/validators/UserValidation'
 import { appointmentStore } from './app/validators/AppointmentValidation'
@@ -29,6 +28,8 @@ const bruteStore = new BruteRedis({
   port: process.env.REDIS_PORT
 })
 const bruteForce = new Brute(bruteStore)
+
+routes.get('/', AppController.index)
 
 routes.post('/users', userStore, UserController.store)
 routes.post('/sessions', bruteForce.prevent, sessionStore, SessionController.store)
@@ -43,7 +44,7 @@ routes.get('/appointments', AppointmentController.index)
 routes.post('/appointments', appointmentStore, AppointmentController.store)
 routes.delete('/appointments/:id', AppointmentController.delete)
 
-routes.get('/schedule', ScheduleController.index)
+routes.get('/schedules', ScheduleController.index)
 
 routes.get('/notifications', NotificationController.index)
 routes.put('/notifications/:id', NotificationController.update)
