@@ -4,7 +4,7 @@
   "description": "API da aplicação Barbershop",
   "main": "src/server.js",
   "scripts": {
-    "dev": "nodemon",
+    "dev": "sucrase-node src/server.js",
     "queue": "nodemon src/queue.js",
     "seed:all": "npx sequelize-cli db:seed:all",
     "migrate:all": "npx sequelize-cli db:migrate",

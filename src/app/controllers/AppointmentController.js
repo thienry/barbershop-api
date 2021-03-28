@@ -13,10 +13,10 @@ class AppointmentController {
     const cacheKey = `user:${req.userId}:appointments:${page}`
 
     const cached = await Cache.get(cacheKey)
-    if (cached)
+    if (cached && cached.length)
       return res.json(cached)
 
-    const appointments = Appointment.findAll({
+    const appointments = await Appointment.findAll({
       where: { user_id: req.userId, canceled_at: null },
       order: ['date'],
       limit: 20,
@@ -54,7 +54,7 @@ class AppointmentController {
 
     return res.json(appointment)
   }
- 
+
   async delete(req, res) {
     const appointment = await DeleteAppointment.run({
       provider_id: req.params.id,
