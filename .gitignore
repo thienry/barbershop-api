@@ -2,3 +2,4 @@
 package-lock.json
 .env
 /temp/uploads/*
+.DS_Store
